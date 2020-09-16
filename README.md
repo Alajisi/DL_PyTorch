@@ -1,2 +1,2 @@
 # DL_PyTorch
-使用PyTorch实现动手学深度学习中的代码ing
+使用PyTorch实现《动手学深度学习》中的代码ing
