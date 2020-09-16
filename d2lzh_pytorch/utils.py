@@ -64,18 +64,20 @@ def linreg(X, w, b):
 
 
 def squared_loss(y_hat, y):
+    # 使用平方损失来定义线性回归的损失函数，我们需要把真实值y变形成预测值y_hat的形状
     # 注意这里返回的是向量, 另外, pytorch里的MSELoss并没有除以 2
     return ((y_hat - y.view(y_hat.size())) ** 2) / 2
 
 
 def sgd(params, lr, batch_size):
+    # 小批量随机梯度下降算法，不断迭代模型参数来优化损失函数
     # 为了和原书保持一致，这里除以了batch_size，但是应该是不用除的，因为一般用PyTorch计算loss时就默认已经
     # 沿batch维求了平均了。
     for param in params:
-        param.data -= lr * param.grad / batch_size  # 注意这里更改param时用的param.data
+        # param.data -= lr * param.grad / batch_size  # 注意这里更改param时用的param.data
+        param.data -= lr * param.grad
 
-
-# ######################3##### 3.5 #############################
+    # ######################3##### 3.5 #############################
 def get_fashion_mnist_labels(labels):
     text_labels = ['t-shirt', 'trouser', 'pullover', 'dress', 'coat',
                    'sandal', 'shirt', 'sneaker', 'bag', 'ankle boot']
