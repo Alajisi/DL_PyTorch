@@ -11,14 +11,15 @@ true_w = [2, -3.4]   # 权重
 true_b = 4.2         # 偏差
 batch_size = 10      # 批量大小
 lr = 0.03            # 学习率
-num_epochs = 3       # 迭代次数
+num_epochs = 5       # 迭代次数
 net = linreg         # 线性回归的矢量计算表达式
 loss = squared_loss  # 平方损失
 
 # 生成数据集
 features = torch.randn(num_examples, num_inputs, dtype=torch.float32)  # 创建1000行2列标准正态分布Tensor
 labels = true_w[0] * features[:, 0] + true_w[1] * features[:, 1] + true_b  # 生成标签 y=Xw+b
-labels += torch.tensor(np.random.normal(0, 0.01, size=labels.size()), dtype=torch.float32)  # 标签加上噪声项 y=Xw+b+ϵ
+labels += torch.tensor(np.random.normal(0, 0.01, size=labels.size()), dtype=torch.float32)
+# 标签加上噪声项 y=Xw+b+ϵ 真实数据，用来计算损失
 # 噪声项 ϵ 服从均值为0、标准差为0.01的正态分布。噪声代表了数据集中无意义的干扰。
 # features的每一行是一个长度为2的向量，而labels的每一行是一个长度为1的向量（标量）
 # print(features[0], labels[0])
@@ -47,7 +48,7 @@ for epoch in range(num_epochs):  # 训练模型一共需要num_epochs个迭代�
         l.backward()  # 小批量的损失对模型参数求梯度
         sgd([w, b], lr, batch_size)  # 使用小批量随机梯度下降迭代模型参数
 
-        # 不要忘了梯度清零
+        # 不要忘了梯度清零，每个小批量样本清一次
         w.grad.data.zero_()
         b.grad.data.zero_()
     train_l = loss(net(features, w, b), labels)
