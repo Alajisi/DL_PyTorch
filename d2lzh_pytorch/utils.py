@@ -74,8 +74,20 @@ def sgd(params, lr, batch_size):
     # 为了和原书保持一致，这里除以了batch_size，但是应该是不用除的，因为一般用PyTorch计算loss时就默认已经
     # 沿batch维求了平均了。
     for param in params:
-        # param.data -= lr * param.grad / batch_size  # 注意这里更改param时用的param.data
-        param.data -= lr * param.grad
+        param.data -= lr * param.grad / batch_size  # 注意这里更改param时用的param.data
+
+
+    # ######################3##### 3.3 #############################
+class LinearNet(nn.Module):
+    # 线性回归模型。
+    def __init__(self, n_feature):
+        super(LinearNet, self).__init__()
+        self.linear = nn.Linear(n_feature, 1)
+
+    # forward 定义前向传播
+    def forward(self, x):
+        y = self.linear(x)
+        return y
 
     # ######################3##### 3.5 #############################
 def get_fashion_mnist_labels(labels):
