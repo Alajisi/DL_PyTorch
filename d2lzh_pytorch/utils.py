@@ -147,29 +147,30 @@ def softmax(X):
 # 训练模型
 def train_ch3(net, train_iter, test_iter, loss, num_epochs, batch_size,
               params=None, lr=None, optimizer=None):
-    for epoch in range(num_epochs):
+    for epoch in range(num_epochs):  # 每次训练完所有数据（多个批量）
         train_l_sum, train_acc_sum, n = 0.0, 0.0, 0
-        for X, y in train_iter:
+        for X, y in train_iter:  # 遍历设定批量的数据
             y_hat = net(X)
-            l = loss(y_hat, y).sum()
+            l = loss(y_hat, y).sum()  # 首先计算损失函数
 
-            # 梯度清零
+            # 梯度清零，不将梯度清零的话，梯度会与上一个batch的数据相关，因此该函数要写在反向传播和梯度下降之前。存的是上一个batch的梯度，所以开始要先清理
             if optimizer is not None:
-                optimizer.zero_grad()
+                optimizer.zero_grad()  # 1.先将梯度归零
             elif params is not None and params[0].grad is not None:
                 for param in params:
                     param.grad.data.zero_()
 
-            l.backward()  # 自动计算所有的梯度
+            l.backward()  # 2.然后反向传播计算得到每个参数的梯度值
+            # PyTorch的反向传播(即tensor.backward())是通过autograd包来实现的，autograd包会根据tensor进行过的数学运算来自动计算其对应的梯度。
             if optimizer is None:
                 # 随机梯度下降优化算法
                 sgd(params, lr, batch_size)
             else:
-                optimizer.step()  # “softmax回归的简洁实现”一节将用到
+                optimizer.step()  # 3.通过梯度下降执行一步参数更新
 
             train_l_sum += l.item()
             train_acc_sum += (y_hat.argmax(dim=1) == y).sum().item()
-            n += y.shape[0]
+            n += y.shape[0]  # 最外层长度，不过label好像也只有一层
         test_acc = evaluate_accuracy(test_iter, net)
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f'
               % (epoch + 1, train_l_sum / n, train_acc_sum / n, test_acc))
