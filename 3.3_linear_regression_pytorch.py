@@ -59,7 +59,7 @@ init.constant_(net[0].bias, val=0)  # 也可以直接修改bias的data: net[0].b
 # 损失函数
 loss = nn.MSELoss()  # 均方误差损失
 
-# 优化算法
+# 优化算法  定义一个优化器实例
 optimizer = optim.SGD(net.parameters(), lr=0.03)  # 指定学习率为0.03的小批量随机梯度下降（SGD）
 # print(optimizer)
 
