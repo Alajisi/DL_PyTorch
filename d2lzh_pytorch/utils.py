@@ -70,7 +70,7 @@ def squared_loss(y_hat, y):
 
 
 def sgd(params, lr, batch_size):
-    # 小批量随机梯度下降算法，不断迭代模型参数来优化损失函数
+    # 小批量随机梯度下降算法：先选取一组模型参数的初始值，如随机选取；接下来对参数进行多次迭代，使每次迭代都可能降低损失函数的值。
     # 为了和原书保持一致，这里除以了batch_size，但是应该是不用除的，因为一般用PyTorch计算loss时就默认已经
     # 沿batch维求了平均了。
     for param in params:
@@ -160,8 +160,9 @@ def train_ch3(net, train_iter, test_iter, loss, num_epochs, batch_size,
                 for param in params:
                     param.grad.data.zero_()
 
-            l.backward()
+            l.backward()  # 自动计算所有的梯度
             if optimizer is None:
+                # 随机梯度下降优化算法
                 sgd(params, lr, batch_size)
             else:
                 optimizer.step()  # “softmax回归的简洁实现”一节将用到
@@ -175,6 +176,16 @@ def train_ch3(net, train_iter, test_iter, loss, num_epochs, batch_size,
 
 
 # ########################### 3.7 #####################################3
+class LinearNet2(nn.Module):
+    def __init__(self, num_inputs, num_outputs):
+        super(LinearNet2, self).__init__()
+        self.linear = nn.Linear(num_inputs, num_outputs)
+
+    def forward(self, x): # x shape: (batch, 1, 28, 28)
+        y = self.linear(x.view(x.shape[0], -1))
+        return y
+
+
 # 对x的形状转换
 class FlattenLayer(torch.nn.Module):
     def __init__(self):
