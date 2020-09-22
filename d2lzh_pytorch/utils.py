@@ -197,6 +197,7 @@ class FlattenLayer(torch.nn.Module):
 
 
 # ########################### 3.11 ###############################
+# 作图函数semilogy，其中 yy 轴使用了对数尺度
 def semilogy(x_vals, y_vals, x_label, y_label, x2_vals=None, y2_vals=None,
              legend=None, figsize=(3.5, 2.5)):
     set_figsize(figsize)
@@ -206,7 +207,7 @@ def semilogy(x_vals, y_vals, x_label, y_label, x2_vals=None, y2_vals=None,
     if x2_vals and y2_vals:
         plt.semilogy(x2_vals, y2_vals, linestyle=':')
         plt.legend(legend)
-    # plt.show()
+    plt.show()
 
 
 # ############################# 3.13 ##############################
