@@ -67,3 +67,4 @@ net = nn.Sequential(
 )
 print(net)
 print(net(x))
+
